@@ -1,10 +1,49 @@
 # src/main/resources/application-prod.yml
+
 server:
   servlet:
     context-path: /api/v1/
+  port: ${PORT:8080}  # Para Railway
+
 spring:
   datasource:
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  mail:
+    host: smtp.sendgrid.net
+    port: 587
+    username: apikey
+    password: ${SENDGRID_API_KEY}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+    protocol: smtp
+
+application:
+  security:
+    jwt:
+      secret-key: ${APPLICATION_SECURITY_JWT_SECRET_KEY:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+      expiration: ${APPLICATION_SECURITY_JWT_EXPIRATION:86400000} # 1 día
+      refresh-token:
+        expiration: ${APPLICATION_SECURITY_JWT_REFRESH_TOKEN_EXPIRATION:604800000} # 7 días
+
+  mailing:
+    frontend:
+      activation-url: https://book-social-proyect-diego-bravos-projects.vercel.app/activate-account
+
+  file:
+    uploads:
+      photos-output-path: ./uploads
