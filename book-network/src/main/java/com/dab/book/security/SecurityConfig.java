@@ -81,7 +81,7 @@ public class SecurityConfig {
 
         // 🔹 Reemplaza por la URL real de tu frontend desplegado
         configuration.setAllowedOrigins(List.of(
-                "https://vercel.com/diego-bravos-projects/book-social-proyect/HoaT52YHhWg4ji16GjmPLPLZ8HEF", // frontend en producción
+                "https://book-social-proyect-diego-bravos-projects.vercel.app", // frontend en producción
                 "http://localhost:4200"                   // entorno local de Angular
         ));
 
