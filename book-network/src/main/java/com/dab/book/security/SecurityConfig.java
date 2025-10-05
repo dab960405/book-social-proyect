@@ -32,16 +32,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // ✅ Activar CORS global
                 .cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
                         req
-                                // ✅ Permitir todas las solicitudes preflight (OPTIONS)
+                                // Preflight CORS
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                                // ✅ Endpoints públicos
-                                .requestMatchers("/api/v1/auth/**").permitAll()
-                                // ✅ Rutas de Swagger
+                                // Endpoints públicos (evaluados sin el context-path)
+                                .requestMatchers("/auth/**").permitAll()
+                                // Swagger y documentación
                                 .requestMatchers(
                                         "/v2/api-docs",
                                         "/v3/api-docs",
@@ -54,27 +53,22 @@ public class SecurityConfig {
                                         "/webjars/**",
                                         "/swagger-ui.html"
                                 ).permitAll()
-                                // ✅ Todo lo demás requiere autenticación
+                                // Resto requiere autenticación
                                 .anyRequest().authenticated()
                 )
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(STATELESS)
-                )
+                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-    /**
-     * ✅ Configuración CORS global
-     */
+    /** Configuración CORS global **/
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-
         configuration.setAllowedOrigins(List.of(
-                "https://book-social-proyect.vercel.app",  // dominio real Vercel
+                "https://book-social-proyect.vercel.app",  // producción (Vercel)
                 "http://localhost:4200"                    // desarrollo local
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
