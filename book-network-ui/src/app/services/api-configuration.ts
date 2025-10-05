@@ -10,6 +10,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class ApiConfiguration {
+  /** Root URL for the backend API */
   rootUrl: string = environment.apiUrl;
 }
 
