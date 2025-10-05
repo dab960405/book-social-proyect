@@ -1,5 +1,7 @@
 package com.dab.book.auth;
 
+
+
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -9,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/auth")   // ✅ prefijo unificado
+@RequestMapping("/auth")   // 👈 sin /api/v1, ya lo agrega el context-path global
 @RequiredArgsConstructor
 @Tag(name = "Authentication")
 public class AuthenticationController {

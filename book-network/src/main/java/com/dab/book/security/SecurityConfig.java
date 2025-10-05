@@ -36,11 +36,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
                         req
-                                // Preflight CORS
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                                // Endpoints públicos (evaluados sin el context-path)
-                                .requestMatchers("/auth/**").permitAll()
-                                // Swagger y documentación
+                                .requestMatchers("/auth/**").permitAll()   // 👈 rutas públicas
                                 .requestMatchers(
                                         "/v2/api-docs",
                                         "/v3/api-docs",
@@ -53,7 +50,6 @@ public class SecurityConfig {
                                         "/webjars/**",
                                         "/swagger-ui.html"
                                 ).permitAll()
-                                // Resto requiere autenticación
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
@@ -68,8 +64,8 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
-                "https://book-social-proyect.vercel.app",  // producción (Vercel)
-                "http://localhost:4200"                    // desarrollo local
+                "https://book-social-proyect.vercel.app",
+                "http://localhost:4200"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
