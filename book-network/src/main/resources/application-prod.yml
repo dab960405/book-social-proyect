@@ -22,25 +22,18 @@ spring:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
+  # Configuración mínima de mail para mantener compatibilidad (no se usa para envío)
   mail:
-    host: smtp.sendgrid.net
-    port: 2525  # ⭐ CAMBIO CRÍTICO: Puerto alternativo de SendGrid
-    username: apikey
-    password: ${SENDGRID_API_KEY}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: true
-          connectiontimeout: 10000  # 10 segundos
-          timeout: 10000
-          writetimeout: 10000
-          ssl:
-            protocols: TLSv1.2  # Protocolo específico
-    protocol: smtp
-    default-encoding: UTF-8
+    host: localhost
+    port: 1025
+
+# ⭐ Configuración de SendGrid HTTP API
+sendgrid:
+  api:
+    key: ${SENDGRID_API_KEY}
+  from:
+    email: ${SENDGRID_FROM_EMAIL:diegobravo.c96@gmail.com}
+    name: ${SENDGRID_FROM_NAME:Book Social Network}
 
 application:
   security:
