@@ -1,6 +1,9 @@
 package com.dab.book.auth;
 
-
+mport com.dab.book.auth.AuthenticationService;
+import com.dab.book.auth.AuthenticationRequest;
+import com.dab.book.auth.AuthenticationResponse;
+import com.dab.book.auth.RegistrationRequest;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
