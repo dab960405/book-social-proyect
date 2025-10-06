@@ -3,7 +3,7 @@
 server:
   servlet:
     context-path: /api/v1
-  port: ${PORT:8080}  # Para Railway
+  port: ${PORT:8080}
 
 spring:
   datasource:
@@ -24,21 +24,31 @@ spring:
 
   mail:
     host: smtp.sendgrid.net
-    port: 587
+    port: 2525  # ⭐ CAMBIO CRÍTICO: Puerto alternativo de SendGrid
     username: apikey
     password: ${SENDGRID_API_KEY}
     properties:
-      mail.smtp.auth: true
-      mail.smtp.starttls.enable: true
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 10000  # 10 segundos
+          timeout: 10000
+          writetimeout: 10000
+          ssl:
+            protocols: TLSv1.2  # Protocolo específico
     protocol: smtp
+    default-encoding: UTF-8
 
 application:
   security:
     jwt:
       secret-key: ${APPLICATION_SECURITY_JWT_SECRET_KEY:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
-      expiration: ${APPLICATION_SECURITY_JWT_EXPIRATION:86400000} # 1 día
+      expiration: ${APPLICATION_SECURITY_JWT_EXPIRATION:86400000}
       refresh-token:
-        expiration: ${APPLICATION_SECURITY_JWT_REFRESH_TOKEN_EXPIRATION:604800000} # 7 días
+        expiration: ${APPLICATION_SECURITY_JWT_REFRESH_TOKEN_EXPIRATION:604800000}
 
   mailing:
     frontend:
