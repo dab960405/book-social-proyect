@@ -7,7 +7,7 @@ on:
     paths:
       - book-network/**
       - 'pom.xml'
-      - '.github/workflows/backend-ci-cd.yml'
+      - '.github/workflows/backend-ci-cd.yml' # para re-disparar si se modifica el pipeline
   pull_request:
     branches:
       - main
@@ -39,7 +39,7 @@ jobs:
 
       - name: Run Unit Tests
         working-directory: ./book-network
-        run: ./mvnw clean test -Dspring.profiles.active=test
+        run: ./mvnw clean test
 
   # 🚀 DEPLOY AUTOMÁTICO A RAILWAY
   deploy:
@@ -50,12 +50,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
-
-      - name: Deploy to Railway
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: |
-          cd book-network
-          railway up --service book-network
+      - name: Deploy with Railway CLI
+        uses: railwayapp/action-deploy@v1
+        with:
+          railwayToken: ${{ secrets.RAILWAY_TOKEN }}
