@@ -7,7 +7,7 @@ on:
     paths:
       - book-network/**
       - 'pom.xml'
-      - '.github/workflows/backend-ci-cd.yml' # para re-disparar si se modifica el pipeline
+      - '.github/workflows/backend-ci-cd.yml'
   pull_request:
     branches:
       - main
@@ -50,7 +50,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy with Railway CLI
-        uses: railwayapp/action-deploy@v1
-        with:
-          railwayToken: ${{ secrets.RAILWAY_TOKEN }}
+      - name: Deploy to Railway
+        run: |
+          npm install -g @railway/cli
+          cd book-network
+          railway up --service book-network
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
