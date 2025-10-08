@@ -75,7 +75,7 @@ public class EmailService {
                 Response response = sg.api(request);
 
                 if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
-                    log.info("✅ Email se ha enviadog exitosamente a: {} - Status: {}", to, response.getStatusCode());
+                    log.info("✅ Email se ha enviado exitosamente a: {} - Status: {}", to, response.getStatusCode());
                 } else {
                     log.error("❌ Error al enviar email a: {}. Status: {}, Body: {}",
                             to, response.getStatusCode(), response.getBody());
