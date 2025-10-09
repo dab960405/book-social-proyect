@@ -14,7 +14,6 @@ on:
       - 'book-network-ui/**'
 
 jobs:
-  # ✅ TEST DEL FRONTEND
   test:
     name: Run Frontend Tests
     runs-on: ubuntu-latest
@@ -38,11 +37,13 @@ jobs:
             npm install
           fi
 
-      - name: Run tests
-        working-directory: ./book-network-ui
-        run: npm test -- --no-watch --no-progress
+      - name: Install Chrome
+        run: sudo apt-get update && sudo apt-get install -y google-chrome-stable
 
-  # 🚀 DEPLOY AUTOMÁTICO A VERCEL
+      - name: Run tests (Headless CI)
+        working-directory: ./book-network-ui
+        run: npm run test -- --watch=false --no-progress --browsers=ChromeHeadlessCI
+
   deploy:
     name: Deploy Frontend to Vercel
     runs-on: ubuntu-latest
