@@ -20,19 +20,18 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: false,
-    browsers: ['ChromeHeadlessCI'],
+    browsers: ['Chrome'],
     singleRun: true,
     restartOnFileChange: true,
     customLaunchers: {
       ChromeHeadlessCI: {
         base: 'ChromeHeadless',
         flags: [
-          '--headless',
           '--no-sandbox',
           '--disable-gpu',
           '--disable-dev-shm-usage',
           '--disable-software-rasterizer',
-          '--remote-debugging-port=9222',
+          '--disable-setuid-sandbox'
         ],
       },
     },
