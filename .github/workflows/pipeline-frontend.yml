@@ -22,7 +22,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 👇 Ajuste clave: especifica dónde está el lockfile
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -41,7 +40,7 @@ jobs:
 
       - name: Run tests
         working-directory: ./book-network-ui
-        run: npm test -- --watchAll=false
+        run: npm test -- -- --watch=false --browsers=ChromeHeadless
 
   # 🚀 DEPLOY AUTOMÁTICO A VERCEL
   deploy:
