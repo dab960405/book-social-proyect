@@ -5,13 +5,13 @@ on:
     branches:
       - main
     paths:
-      - book-network-ui/**
+      - 'book-network-ui/**'
       - '.github/workflows/frontend-ci-cd.yml'
   pull_request:
     branches:
       - main
     paths:
-      - book-network-ui/**
+      - 'book-network-ui/**'
 
 jobs:
   # ✅ TEST DEL FRONTEND
@@ -22,15 +22,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 👇 Ajuste clave: especifica dónde está el lockfile
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: 'npm'
+          cache-dependency-path: 'book-network-ui/package-lock.json'
 
       - name: Install dependencies
         working-directory: ./book-network-ui
-        run: npm ci
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
 
       - name: Run tests
         working-directory: ./book-network-ui
