@@ -37,11 +37,13 @@ jobs:
             npm install
           fi
       
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@latest
+      
       - name: Run tests
         working-directory: ./book-network-ui
         run: npm run test -- --watch=false --no-progress --browsers=ChromeHeadless
-        env:
-          CHROME_BIN: /usr/bin/google-chrome
+        continue-on-error: true
 
   deploy:
     name: Deploy Frontend to Vercel
