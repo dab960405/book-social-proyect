@@ -20,7 +20,7 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: false,
-    browsers: ['Chrome'],
+    browsers: ['ChromeHeadless'],  // <-- CAMBIADO AQUÍ
     singleRun: true,
     restartOnFileChange: true,
     customLaunchers: {
