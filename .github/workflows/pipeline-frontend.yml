@@ -20,14 +20,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+      
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: 'npm'
           cache-dependency-path: 'book-network-ui/package-lock.json'
-
+      
       - name: Install dependencies
         working-directory: ./book-network-ui
         run: |
@@ -36,13 +36,12 @@ jobs:
           else
             npm install
           fi
-
-      - name: Install Chrome
-        run: sudo apt-get update && sudo apt-get install -y google-chrome-stable
-
-      - name: Run tests (Headless CI)
+      
+      - name: Run tests
         working-directory: ./book-network-ui
-        run: npm run test -- --watch=false --no-progress --browsers=ChromeHeadlessCI
+        run: npm run test -- --watch=false --no-progress --browsers=ChromeHeadless
+        env:
+          CHROME_BIN: /usr/bin/google-chrome
 
   deploy:
     name: Deploy Frontend to Vercel
@@ -51,7 +50,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+      
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v25
         with:
