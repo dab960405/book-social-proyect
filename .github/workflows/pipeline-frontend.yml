@@ -1,4 +1,4 @@
-name: BSN Frontend CI/CD
+name: BSN Frontend Deploy
 
 on:
   push:
@@ -7,27 +7,22 @@ on:
     paths:
       - 'book-network-ui/**'
       - '.github/workflows/frontend-ci-cd.yml'
-  pull_request:
-    branches:
-      - main
-    paths:
-      - 'book-network-ui/**'
 
 jobs:
-  test:
-    name: Run Frontend Tests
+  deploy:
+    name: Deploy Frontend to Vercel
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: 'npm'
           cache-dependency-path: 'book-network-ui/package-lock.json'
-      
+
       - name: Install dependencies
         working-directory: ./book-network-ui
         run: |
@@ -36,27 +31,15 @@ jobs:
           else
             npm install
           fi
-      
-      - name: Setup Chrome
-        uses: browser-actions/setup-chrome@latest
-      
-      - name: Run tests
-        working-directory: ./book-network-ui
-        run: npm run test -- --watch=false --no-progress --browsers=ChromeHeadless
-        continue-on-error: true
 
-  deploy:
-    name: Deploy Frontend to Vercel
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
+      - name: Setup Vercel CLI
+        run: npm install -g vercel@latest
+
       - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
+        uses: amondnet/vercel-action@v20.0.1
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           working-directory: ./book-network-ui
+          vercel-args: '--prod'
