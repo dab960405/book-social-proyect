@@ -1,9 +1,329 @@
-div {
-  &.card {
-    max-height: 450px;
-    min-height: 430px;
+// Variables para mantener consistencia
+$primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$primary-color: #667eea;
+$secondary-color: #764ba2;
+$text-dark: #1f2937;
+$text-muted: #6b7280;
+$background-light: #f9fafb;
+$border-color: #e5e7eb;
+$success-color: #10b981;
+$danger-color: #ef4444;
+$warning-color: #f59e0b;
+
+// Navbar Base
+.navbar {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 12px 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+}
+
+// Brand
+.navbar-brand {
+  font-size: 22px;
+  font-weight: 800;
+  background: $primary-gradient;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 1px;
+  padding: 8px 16px;
+  border-radius: 12px;
+  position: relative;
+  transition: all 0.3s ease;
+
+  &::before {
+    content: '📚';
+    position: absolute;
+    left: -4px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+  }
+
+  &:hover {
+    background: rgba($primary-color, 0.1);
+    -webkit-text-fill-color: $primary-color;
   }
 }
-i {
-  cursor: pointer;
+
+// Navigation Items
+.navbar-nav {
+  gap: 4px;
+
+  .nav-item {
+    .nav-link {
+      position: relative;
+      padding: 10px 16px;
+      border-radius: 12px;
+      color: $text-muted;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      i {
+        font-size: 16px;
+        transition: transform 0.3s ease;
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 4px;
+        left: 50%;
+        transform: translateX(-50%) scaleX(0);
+        width: 60%;
+        height: 3px;
+        background: $primary-gradient;
+        border-radius: 3px;
+        transition: transform 0.3s ease;
+      }
+
+      &:hover {
+        background: rgba($primary-color, 0.08);
+        color: $primary-color;
+        transform: translateY(-1px);
+
+        i {
+          transform: scale(1.15);
+        }
+      }
+
+      &.active {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.12), rgba(118, 75, 162, 0.12));
+        color: $primary-color;
+        font-weight: 700;
+
+        &::after {
+          transform: translateX(-50%) scaleX(1);
+        }
+
+        i {
+          color: $secondary-color;
+        }
+      }
+    }
+  }
+}
+
+// Search Form
+form[role="search"] {
+  gap: 12px !important;
+
+  .form-control {
+    padding: 10px 16px;
+    border: 2px solid $border-color;
+    border-radius: 12px;
+    font-size: 14px;
+    width: 240px;
+    transition: all 0.3s ease;
+    background: rgba(243, 244, 246, 0.5);
+
+    &::placeholder {
+      color: #9ca3af;
+    }
+
+    &:focus {
+      border-color: $primary-color;
+      box-shadow: 0 0 0 4px rgba($primary-color, 0.1);
+      background: white;
+      width: 280px;
+    }
+  }
+
+  .btn-outline-success {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border-radius: 12px;
+    border: 2px solid $success-color;
+    background: transparent;
+    color: $success-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+
+    i {
+      font-size: 16px;
+    }
+
+    &:hover {
+      background: $success-color;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba($success-color, 0.3);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  // User Welcome Section
+  > span {
+    font-size: 13px;
+    color: $text-muted;
+    font-weight: 500;
+
+    &.text-capitalize {
+      font-size: 15px;
+      color: $text-dark;
+      font-weight: 700;
+      padding: 8px 14px;
+      background: rgba($primary-color, 0.08);
+      border-radius: 10px;
+      position: relative;
+      
+      &::before {
+        content: '👤';
+        margin-right: 6px;
+      }
+    }
+  }
+
+  // Logout Button
+  .btn-link {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border-radius: 12px;
+    background: linear-gradient(135deg, $danger-color 0%, #dc2626 100%);
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba($danger-color, 0.2);
+    text-decoration: none;
+
+    i {
+      font-size: 18px;
+    }
+
+    &:hover {
+      transform: translateY(-2px) rotate(5deg);
+      box-shadow: 0 4px 12px rgba($danger-color, 0.4);
+    }
+
+    &:active {
+      transform: translateY(0) rotate(0deg);
+    }
+  }
+}
+
+// Mobile Toggle
+.navbar-toggler {
+  border: 2px solid $border-color;
+  border-radius: 10px;
+  padding: 8px 12px;
+  transition: all 0.3s ease;
+
+  &:focus {
+    box-shadow: 0 0 0 4px rgba($primary-color, 0.1);
+    border-color: $primary-color;
+  }
+
+  .navbar-toggler-icon {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+// Responsive Adjustments
+@media (max-width: 991px) {
+  .navbar-collapse {
+    margin-top: 16px;
+    padding: 16px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .navbar-nav {
+    gap: 8px;
+    margin-bottom: 16px !important;
+
+    .nav-item {
+      .nav-link {
+        padding: 12px 16px;
+        
+        &:hover {
+          transform: translateX(4px);
+        }
+      }
+    }
+  }
+
+  form[role="search"] {
+    flex-direction: column;
+    align-items: stretch !important;
+
+    .form-control {
+      width: 100%;
+
+      &:focus {
+        width: 100%;
+      }
+    }
+
+    .btn-outline-success {
+      width: 100%;
+      height: 42px;
+    }
+
+    > span {
+      &.text-capitalize {
+        text-align: center;
+      }
+    }
+
+    .btn-link {
+      width: 100%;
+      height: 42px;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar-brand {
+    font-size: 18px;
+    padding: 6px 12px;
+  }
+
+  form[role="search"] {
+    > span:not(.text-capitalize) {
+      display: none;
+    }
+  }
+}
+
+// Smooth Animations
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Active link enhancement (for RouterLinkActive)
+.nav-link.active {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.12), rgba(118, 75, 162, 0.12)) !important;
+  color: $primary-color !important;
+  font-weight: 700;
+
+  &::after {
+    transform: translateX(-50%) scaleX(1) !important;
+  }
+
+  i {
+    color: $secondary-color !important;
+  }
 }
