@@ -9,7 +9,6 @@ import {BookResponse} from '../../../../services/models/book-response';
 export class BookCardComponent {
   private _book: BookResponse = {};
   private _manage = false;
-  private _bookCover: string | undefined;
 
   get bookCover(): string | undefined {
     if (this._book.cover) {
@@ -27,7 +26,6 @@ export class BookCardComponent {
     this._book = value;
   }
 
-
   get manage(): boolean {
     return this._manage;
   }
@@ -43,6 +41,7 @@ export class BookCardComponent {
   @Output() private borrow: EventEmitter<BookResponse> = new EventEmitter<BookResponse>();
   @Output() private edit: EventEmitter<BookResponse> = new EventEmitter<BookResponse>();
   @Output() private details: EventEmitter<BookResponse> = new EventEmitter<BookResponse>();
+  @Output() private delete: EventEmitter<BookResponse> = new EventEmitter<BookResponse>(); // 🔥 NUEVO
 
   onShare() {
     this.share.emit(this._book);
@@ -66,5 +65,9 @@ export class BookCardComponent {
 
   onShowDetails() {
     this.details.emit(this._book);
+  }
+
+  onDelete() { // 🔥 NUEVO
+    this.delete.emit(this._book);
   }
 }

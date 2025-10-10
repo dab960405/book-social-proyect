@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {PageResponseBookResponse} from '../../../../services/models/page-response-book-response';
 import {BookService} from '../../../../services/services/book.service';
+import {CustomBookService} from '../../../../services/services/custom-book.service'; // 🔥 IMPORTAR
 import {BookResponse} from '../../../../services/models/book-response';
 import {Router} from '@angular/router';
 
@@ -18,6 +19,7 @@ export class MyBooksComponent implements OnInit {
 
   constructor(
     private bookService: BookService,
+    private customBookService: CustomBookService, // 🔥 INYECTAR
     private router: Router
   ) {
   }
@@ -92,5 +94,22 @@ export class MyBooksComponent implements OnInit {
 
   editBook(book: BookResponse) {
     this.router.navigate(['books', 'manage', book.id]);
+  }
+
+  // 🔥 NUEVO MÉTODO DELETE
+  deleteBook(book: BookResponse) {
+    if (confirm(`¿Estás seguro de que deseas eliminar "${book.title}"?`)) {
+      this.customBookService.deleteBook({
+        'book-id': book.id as number
+      }).subscribe({
+        next: () => {
+          this.findAllBooks(); // recargar la lista
+        },
+        error: (err) => {
+          console.error('Error al eliminar el libro:', err);
+          alert('No se pudo eliminar el libro. Intenta nuevamente.');
+        }
+      });
+    }
   }
 }
