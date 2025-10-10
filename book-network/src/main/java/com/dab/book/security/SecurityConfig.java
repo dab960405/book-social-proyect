@@ -1,5 +1,7 @@
 package com.dab.book.security;
 
+
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,7 +39,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req ->
                         req
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                                .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/auth/**").permitAll()   // 👈 rutas públicas
                                 .requestMatchers(
                                         "/v2/api-docs",
                                         "/v3/api-docs",
@@ -63,33 +65,17 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-
-        // dominios permitidos
         configuration.setAllowedOrigins(List.of(
                 "https://book-social-proyect.vercel.app",
                 "http://localhost:4200"
         ));
-
-        // métodos HTTP permitidos (incluye DELETE)
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-
-        // cabeceras permitidas
         configuration.setAllowedHeaders(List.of("*"));
-
-        // cabeceras expuestas (importante para que el navegador las vea)
-        configuration.setExposedHeaders(List.of(
-                "Access-Control-Allow-Origin",
-                "Access-Control-Allow-Methods",
-                "Access-Control-Allow-Headers"
-        ));
-
-        // permitir credenciales
+        configuration.addAllowedHeader("Authorization");
         configuration.setAllowCredentials(true);
 
-        // aplicar a toda la API
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
-
         return source;
     }
 }
