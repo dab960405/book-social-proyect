@@ -8,13 +8,17 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.List;
 
-/**
- * Filtro global que asegura que todas las respuestas incluyan los encabezados CORS.
- */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CorsGlobalFilter implements Filter {
+
+    // Lista de orígenes permitidos
+    private static final List<String> ALLOWED_ORIGINS = List.of(
+            "https://book-social-proyect.vercel.app",
+            "http://localhost:4200"
+    );
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
@@ -23,18 +27,30 @@ public class CorsGlobalFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
 
-        // 🔹 Ajusta al dominio real del FRONTEND
-        response.setHeader("Access-Control-Allow-Origin", "https://book-social-proyect.vercel.app");
-        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        response.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
+        String origin = request.getHeader("Origin");
 
-        // Si es OPTIONS, responder inmediatamente
+        // Si el origen está permitido, devolverlo en el header
+        if (origin != null && ALLOWED_ORIGINS.contains(origin)) {
+            response.setHeader("Access-Control-Allow-Origin", origin);
+            response.setHeader("Access-Control-Allow-Credentials", "true");
+        }
+
+        // Métodos HTTP permitidos (incluye DELETE)
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+
+        // Cabeceras permitidas
+        response.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization");
+
+        // Cabeceras expuestas (para que el navegador las lea)
+        response.setHeader("Access-Control-Expose-Headers", "Access-Control-Allow-Origin, Access-Control-Allow-Methods");
+
+        // Si es preflight (OPTIONS), responder inmediatamente con 200 OK
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
             return;
         }
 
+        // Continuar con la cadena de filtros
         chain.doFilter(req, res);
     }
 }
