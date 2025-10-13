@@ -18,7 +18,7 @@ services:
     container_name: bsn-api
     build:
       context: ./book-network
-      dockerfile: ../docker/backend/Dockerfile
+      dockerfile: book-network/Dockerfile
     ports:
       - 8088:8088
     environment:

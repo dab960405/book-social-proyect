@@ -53,12 +53,16 @@ $danger-color: #ef4444;
     position: relative;
 
     &::after {
-      content: '📚';
-      display: block;
-      font-size: 48px;
-      margin-top: 16px;
-      text-align: center;
-    }
+    content: '';
+    display: block;
+    width: 80px;        // Ajusta el tamaño
+    height: 80px;       // Ajusta el tamaño
+    margin: 16px auto 0;
+    background-image: url('../../../assets/images/logo.webp');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
   }
 
   hr {

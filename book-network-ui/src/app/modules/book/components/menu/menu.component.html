@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <!-- 🔥 LOGO AQUÍ -->
     <a class="navbar-brand d-flex align-items-center" routerLink="/books">
-      <img src="../../../../../assets/images/assets_task_01k77r8x06f75adh3xjqsgke9j_1760123280_img_1.webp" alt="BSN Logo" height="40" class="d-inline-block align-text-top">
+      <img src="../../../../../assets/images/nav_bar.webp" alt="BSN Logo" height="70" class="d-inline-block align-text-top">
     </a>
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -17,7 +17,7 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="my-books">
-            <i class="fas fa-book"></i>&nbsp;Libros
+            <i class="fas fa-book"></i>&nbsp;Books
           </a>
         </li>
         <li class="nav-item">
@@ -27,7 +27,7 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="my-returned-books">
-            <i class="fa-solid fa-truck-fast"></i>&nbsp;Libros devue
+            <i class="fa-solid fa-truck-fast"></i>&nbsp;Returned books
           </a>
         </li>
         <li class="nav-item">
@@ -40,7 +40,7 @@
         <input class="form-control" type="search" placeholder="Find a book" aria-label="Search">
         <button class="btn btn-outline-success" type="submit"><i class="fas fa-search"></i></button>
         <span>Welcome</span>
-        <span class="text-capitalize fw-bold">dab+</span>
+        <span class="text-capitalize fw-bold">{{ userFullName || 'User' }}</span>
         <button class="btn btn-link" type="submit" (click)="logout()"><i class="fas fa-door-open"></i></button>
       </form>
     </div>

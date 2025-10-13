@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/book_social_network
-    username: username
-    password: password
+    username: postgres
+    password: nacio1989
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -19,7 +19,7 @@ spring:
     host: smtp.sendgrid.net
     port: 587
     username: apikey               # Así se mantiene configurado para SendGrid
-    password: ${SENDGRID_API_KEY}  # 👈 Se lee desde una variable de entorno (ya no está en el código)
+    password: ${SENDGRID_API_KEY}  # 👈 Se lee desde variable de entorno
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
@@ -29,9 +29,9 @@ application:
   security:
     jwt:
       secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
-      expiration: 86400000          # 1 día
+      expiration: 86400000
       refresh-token:
-        expiration: 604800000       # 7 días
+        expiration: 604800000
   mailing:
     frontend:
       activation-url: http://localhost:4200/activate-account
@@ -41,3 +41,11 @@ application:
 
 server:
   port: 8088
+
+# 👇 Añade esta nueva sección
+sendgrid:
+  api:
+    key: ${SENDGRID_API_KEY}
+  from:
+    email: diegobravo.c96@gmail.com  # <-- pon aquí el remitente que usas en SendGrid
+    name: Book Social Network
