@@ -1,0 +1,3 @@
+build:
+  context: book-network
+  dockerfile: book-network/Dockerfile
