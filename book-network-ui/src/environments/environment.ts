@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://book-social-proyect-production.up.railway.app/api/v1'
+  apiUrl: 'https://conservation-carlye-dab96-288239df.koyeb.app/api/v1'
 };
