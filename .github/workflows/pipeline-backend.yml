@@ -1,78 +1,38 @@
-name: BSN Backend CI/CD
+name: Deploy Backend to Koyeb
 
 on:
   push:
     branches:
       - main
-    paths:
-      - 'book-network/**'
-      - 'pom.xml'
-      - '.github/workflows/pipeline-backend.yml'
-  pull_request:
-    branches:
-      - main
-    paths:
-      - 'book-network/**'
 
 jobs:
-  # ✅ TEST DEL BACKEND
-  test:
-    name: Run Backend Tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'corretto'
-
-      - name: Cache Maven dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-m2-
-
-      - name: Run Unit Tests
-        working-directory: ./book-network
-        run: ./mvnw clean test
-
-  # 🚀 DEPLOY AUTOMÁTICO A KOYEB
   deploy:
-    name: Deploy Backend to Koyeb
     runs-on: ubuntu-latest
-    needs: test
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # ✅ Instalar dependencias necesarias
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y curl jq unzip
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl jq unzip
 
-      # ✅ Instalar Koyeb CLI desde binario estable
       - name: Install Koyeb CLI (Stable Binary)
         run: |
           set -e
-          echo "Descargando versión estable del Koyeb CLI..."
-          curl -L "https://github.com/koyeb/koyeb-cli/releases/latest/download/koyeb-linux-amd64" -o koyeb
+          echo "📦 Descargando versión estable del Koyeb CLI..."
+          curl -fsSL https://github.com/koyeb/koyeb-cli/releases/latest/download/koyeb-linux-amd64 -o koyeb
           chmod +x koyeb
           sudo mv koyeb /usr/local/bin/koyeb
-          echo "Koyeb CLI instalado correctamente ✅"
-          koyeb --version
+          koyeb version
 
-      # 🚀 Desplegar a Koyeb
       - name: Deploy to Koyeb
-        run: |
-          koyeb login --token $KOYEB_API_KEY
-          koyeb services update book-social-proyect \
-            --git github.com/dab960405/book-social-proyect \
-            --branch main \
-            --dockerfile book-network/Dockerfile \
-            --context .
         env:
-          KOYEB_API_KEY: ${{ secrets.KOYEB_API_KEY }}
+          KOYEB_API_TOKEN: ${{ secrets.KOYEB_API_TOKEN }}
+        run: |
+          echo "🚀 Desplegando aplicación en Koyeb..."
+          koyeb app deploy my-app \
+            --git github.com/${{ github.repository }} \
+            --branch main \
+            --token $KOYEB_API_TOKEN
