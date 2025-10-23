@@ -50,13 +50,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Koyeb CLI (Static Download)
+      - name: Install Koyeb CLI (Latest)
         run: |
-          KOYEB_VERSION=v5.6.0
-          curl -L "https://github.com/koyeb/koyeb-cli/releases/download/${KOYEB_VERSION}/koyeb-linux-amd64" -o koyeb
-          chmod +x koyeb
-          sudo mv koyeb /usr/local/bin/koyeb
-          koyeb --version
+            KOYEB_VERSION=$(curl -s https://api.github.com/repos/koyeb/koyeb-cli/releases/latest | grep tag_name | cut -d '"' -f 4)
+            echo "Latest version: $KOYEB_VERSION"
+            curl -L "https://github.com/koyeb/koyeb-cli/releases/download/${KOYEB_VERSION}/koyeb-linux-amd64" -o koyeb
+            chmod +x koyeb
+            sudo mv koyeb /usr/local/bin/koyeb
+            koyeb --version
 
       - name: Deploy to Koyeb
         run: |
