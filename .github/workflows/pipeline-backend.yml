@@ -7,7 +7,7 @@ on:
     paths:
       - 'book-network/**'
       - 'pom.xml'
-      - '.github/workflows/backend-ci-cd.yml'
+      - '.github/workflows/pipeline-backend.yml'
   pull_request:
     branches:
       - main
@@ -41,19 +41,22 @@ jobs:
         working-directory: ./book-network
         run: ./mvnw clean test
 
-  # 🚀 DEPLOY AUTOMÁTICO A RAILWAY
+  # 🚀 DEPLOY AUTOMÁTICO A KOYEB
   deploy:
-    name: Deploy Backend to Railway
+    name: Deploy Backend to Koyeb
     runs-on: ubuntu-latest
     needs: test
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy to Railway
+      - name: Install Koyeb CLI
         run: |
-          npm install -g @railway/cli
-          cd book-network
-          railway up --service book-social-proyect --detach
+          curl -fsSL https://cli.koyeb.com/install.sh | sh
+          sudo mv koyeb /usr/local/bin/
+
+      - name: Deploy to Koyeb
+        run: |
+          koyeb service redeploy book-social-proyect/book-social-proyect
         env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          KOYEB_TOKEN: ${{ secrets.KOYEB_TOKEN }}
