@@ -1,9 +1,9 @@
-name: Deploy Backend to Koyeb
+name: Deploy to Koyeb
 
 on:
   push:
     branches:
-      - main
+      - main  # o la rama que uses para deploy
 
 jobs:
   deploy:
@@ -11,33 +11,29 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
       - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y curl jq unzip
+        run: npm install
 
-      - name: Install Koyeb CLI (Stable Binary)
+      # --- Instalación correcta del CLI de Koyeb ---
+      - name: Install Koyeb CLI
         run: |
-          set -e
-          echo "📦 Descargando e instalando Koyeb CLI..."
-          curl -sL https://get.koyeb.com | bash
-          echo "✅ Instalación completada"
-          # Agregar al PATH correctamente
-          export PATH=$PATH:$HOME/.koyeb/bin
-          echo "$HOME/.koyeb/bin" >> $GITHUB_PATH
-          which koyeb || echo "❌ Koyeb CLI no encontrada"
-          koyeb version || echo "⚠️ Error verificando versión de Koyeb"
+          curl -fsSL https://github.com/koyeb/koyeb-cli/releases/latest/download/koyeb-linux-amd64 -o /usr/local/bin/koyeb
+          chmod +x /usr/local/bin/koyeb
+          koyeb version
 
+      # --- Despliegue en Koyeb ---
       - name: Deploy to Koyeb
         env:
           KOYEB_API_TOKEN: ${{ secrets.KOYEB_API_TOKEN }}
         run: |
           echo "🚀 Desplegando aplicación en Koyeb..."
-          export PATH=$PATH:$HOME/.koyeb/bin
-          koyeb app deploy my-app \
-            --git github.com/${{ github.repository }} \
-            --branch main \
-            --token $KOYEB_API_TOKEN
+          koyeb app deploy --name book-social-proyect --git-branch main --git-repo https://github.com/${{ github.repository }}
+
 
