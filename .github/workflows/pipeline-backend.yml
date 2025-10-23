@@ -1,4 +1,5 @@
-name: BSN Backend CI/CD
+backend:
+  name: BSN Backend CI/CD
 
 on:
   push:
@@ -52,14 +53,15 @@ jobs:
 
       - name: Install Koyeb CLI
         run: |
-          curl -sL https://raw.githubusercontent.com/koyeb/koyeb-cli/main/install.sh | bash
+          curl -fsSL https://raw.githubusercontent.com/koyeb/koyeb-cli/master/install.sh | sh
           echo "$HOME/.koyeb/bin" >> $GITHUB_PATH
-          export PATH="$HOME/.koyeb/bin:$PATH"
-          koyeb --version
+
+      - name: Verify Koyeb CLI Installation
+        run: koyeb version
 
       - name: Deploy to Koyeb
         run: |
-          koyeb apps deploy \
+          koyeb app deploy \
             --app book-social-proyect \
             --git github.com/dab960405/book-social-proyect \
             --branch main \
