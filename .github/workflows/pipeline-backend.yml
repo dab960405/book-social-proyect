@@ -1,5 +1,5 @@
-backend:
-  name: BSN Backend CI/CD
+
+name: BSN Backend CI/CD
 
 on:
   push:
@@ -70,4 +70,3 @@ jobs:
             --token $KOYEB_API_TOKEN
         env:
           KOYEB_API_TOKEN: ${{ secrets.KOYEB_API_TOKEN }}
-
