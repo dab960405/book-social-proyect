@@ -56,19 +56,34 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2️⃣ Instalar jq (para procesar JSON de GitHub API)
+      # 2️⃣ Instalar jq (para procesar JSON de la API de GitHub)
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y jq
 
-      # 3️⃣ Instalar Koyeb CLI (última versión)
+      # 3️⃣ Instalar Koyeb CLI (última versión con soporte para .tar.gz)
       - name: Install Koyeb CLI (Latest)
         run: |
           set -e
           KOYEB_VERSION=$(curl -s https://api.github.com/repos/koyeb/koyeb-cli/releases/latest | jq -r .tag_name)
           echo "Latest version: $KOYEB_VERSION"
-          curl -L "https://github.com/koyeb/koyeb-cli/releases/download/${KOYEB_VERSION}/koyeb-linux-amd64" -o koyeb
-          chmod +x koyeb
+
+          # Detectar arquitectura
+          ARCH=$(uname -m)
+          if [ "$ARCH" = "x86_64" ]; then
+            ARCH="amd64"
+          elif [ "$ARCH" = "aarch64" ]; then
+            ARCH="arm64"
+          fi
+
+          # Descargar el binario correcto (nuevo formato .tar.gz)
+          curl -L "https://github.com/koyeb/koyeb-cli/releases/download/${KOYEB_VERSION}/koyeb_${KOYEB_VERSION#v}_linux_${ARCH}.tar.gz" -o koyeb.tar.gz
+
+          # Extraer y mover a /usr/local/bin
+          tar -xzf koyeb.tar.gz
           sudo mv koyeb /usr/local/bin/koyeb
+          chmod +x /usr/local/bin/koyeb
+
+          # Verificar instalación
           koyeb --version
 
       # 4️⃣ Desplegar automáticamente a Koyeb
