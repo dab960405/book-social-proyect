@@ -1,4 +1,3 @@
-
 name: BSN Backend CI/CD
 
 on:
@@ -55,17 +54,16 @@ jobs:
         run: |
           curl -sSfL https://install.koyeb.com | sh
           echo "$HOME/.koyeb/bin" >> $GITHUB_PATH
-          export PATH="$HOME/.koyeb/bin:$PATH"
-          koyeb --version
+        shell: bash
 
       - name: Deploy to Koyeb
         run: |
-          koyeb apps deploy \
-            --app book-social-proyect \
+          export PATH="$HOME/.koyeb/bin:$PATH"
+          koyeb login --token $KOYEB_API_KEY
+          koyeb services update book-social-proyect \
             --git github.com/dab960405/book-social-proyect \
             --branch main \
             --dockerfile book-network/Dockerfile \
-            --context . \
-            --token $KOYEB_API_TOKEN
+            --context .
         env:
-          KOYEB_API_TOKEN: ${{ secrets.KOYEB_API_TOKEN }}
+          KOYEB_API_KEY: ${{ secrets.KOYEB_API_KEY }}
