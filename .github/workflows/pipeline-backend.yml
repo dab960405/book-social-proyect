@@ -52,11 +52,11 @@ jobs:
 
       - name: Install Koyeb CLI
         run: |
-          curl -s https://install.koyeb.com | bash
+          wget https://github.com/koyeb/koyeb-cli/releases/latest/download/koyeb-linux-amd64
+          chmod +x koyeb-linux-amd64
           mkdir -p $HOME/.koyeb/bin
-          mv koyeb $HOME/.koyeb/bin/
+          mv koyeb-linux-amd64 $HOME/.koyeb/bin/koyeb
           echo "$HOME/.koyeb/bin" >> $GITHUB_PATH
-          export PATH=$PATH:$HOME/.koyeb/bin
           koyeb --version
 
       - name: Deploy to Koyeb
