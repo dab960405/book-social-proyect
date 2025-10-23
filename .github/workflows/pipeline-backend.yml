@@ -53,21 +53,19 @@ jobs:
 
       - name: Install Koyeb CLI
         run: |
-          curl -fsSL https://raw.githubusercontent.com/koyeb/koyeb-cli/master/install.sh | sh
+          curl -sL https://raw.githubusercontent.com/koyeb/koyeb-cli/main/install.sh | bash
           echo "$HOME/.koyeb/bin" >> $GITHUB_PATH
-
-      - name: Verify Koyeb CLI Installation
-        run: koyeb version
+          export PATH="$HOME/.koyeb/bin:$PATH"
+          koyeb --version
 
       - name: Deploy to Koyeb
         run: |
-          koyeb service create backend-service \
+          koyeb apps deploy \
             --app book-social-proyect \
             --git github.com/dab960405/book-social-proyect \
-            --git-branch main \
-            --git-builder docker \
-            --git-docker-dockerfile book-network/Dockerfile \
-            --instance-type free \
-            --token ${{ secrets.KOYEB_API_TOKEN }}
+            --branch main \
+            --dockerfile book-network/Dockerfile \
+            --context . \
+            --token $KOYEB_API_TOKEN
         env:
           KOYEB_API_TOKEN: ${{ secrets.KOYEB_API_TOKEN }}
