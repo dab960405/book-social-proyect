@@ -50,39 +50,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 3️⃣ Instalar Koyeb CLI (maneja .tar.gz y .zip automáticamente)
-      - name: Install Koyeb CLI (Auto Format)
+      # ✅ Instalar dependencias necesarias
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y curl jq unzip
+
+      # ✅ Instalar Koyeb CLI desde binario estable
+      - name: Install Koyeb CLI (Stable Binary)
         run: |
           set -e
-          KOYEB_VERSION=$(curl -s https://api.github.com/repos/koyeb/koyeb-cli/releases/latest | jq -r .tag_name)
-          echo "Última versión detectada: $KOYEB_VERSION"
-
-          ARCH=$(uname -m)
-          if [ "$ARCH" = "x86_64" ]; then
-            ARCH="amd64"
-          elif [ "$ARCH" = "aarch64" ]; then
-            ARCH="arm64"
-          fi
-
-          BASE_URL="https://github.com/koyeb/koyeb-cli/releases/download/${KOYEB_VERSION}"
-          TAR_URL="${BASE_URL}/koyeb_${KOYEB_VERSION#v}_linux_${ARCH}.tar.gz"
-          ZIP_URL="${BASE_URL}/koyeb_${KOYEB_VERSION#v}_linux_${ARCH}.zip"
-
-          echo "Probando descarga de formato .tar.gz..."
-          if curl --head --silent --fail "$TAR_URL" > /dev/null; then
-            echo "Descargando versión .tar.gz"
-            curl -L "$TAR_URL" -o koyeb.tar.gz
-            tar -xzf koyeb.tar.gz
-          else
-            echo "Descargando versión .zip"
-            curl -L "$ZIP_URL" -o koyeb.zip
-            unzip koyeb.zip
-          fi
-
+          echo "Descargando versión estable del Koyeb CLI..."
+          curl -L "https://github.com/koyeb/koyeb-cli/releases/latest/download/koyeb-linux-amd64" -o koyeb
+          chmod +x koyeb
           sudo mv koyeb /usr/local/bin/koyeb
-          chmod +x /usr/local/bin/koyeb
+          echo "Koyeb CLI instalado correctamente ✅"
           koyeb --version
 
+      # 🚀 Desplegar a Koyeb
       - name: Deploy to Koyeb
         run: |
           koyeb login --token $KOYEB_API_KEY
@@ -93,4 +76,3 @@ jobs:
             --context .
         env:
           KOYEB_API_KEY: ${{ secrets.KOYEB_API_KEY }}
-
