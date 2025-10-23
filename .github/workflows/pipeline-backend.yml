@@ -61,12 +61,15 @@ jobs:
 
       - name: Deploy to Koyeb
         run: |
-          koyeb app deploy \
-            --app book-social-proyect \
-            --git github.com/dab960405/book-social-proyect \
-            --branch main \
-            --dockerfile book-network/Dockerfile \
-            --context . \
-            --token $KOYEB_API_TOKEN
+          koyeb service create \
+          --app book-social-proyect \
+          --name backend-service \
+          --git github.com/dab960405/book-social-proyect \
+          --git-branch main \
+          --git-builder docker \
+          --git-docker-dockerfile book-network/Dockerfile \
+          --git-docker-context . \
+          --instance-type free \
+          --token ${{ secrets.KOYEB_API_TOKEN }}
         env:
           KOYEB_API_TOKEN: ${{ secrets.KOYEB_API_TOKEN }}
