@@ -20,15 +20,18 @@ jobs:
     name: Run Backend Tests
     runs-on: ubuntu-latest
     steps:
+      # 1️⃣ Clonar el repositorio
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 2️⃣ Configurar Java 17
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'corretto'
 
+      # 3️⃣ Cache de dependencias Maven
       - name: Cache Maven dependencies
         uses: actions/cache@v4
         with:
@@ -37,36 +40,58 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-m2-
 
+      # 4️⃣ Ejecutar pruebas unitarias
       - name: Run Unit Tests
         working-directory: ./book-network
         run: ./mvnw clean test
+
 
   # 🚀 DEPLOY AUTOMÁTICO A KOYEB
   deploy:
     name: Deploy Backend to Koyeb
     runs-on: ubuntu-latest
-    needs: test
+    needs: test   # Solo se ejecuta si los tests pasan correctamente
     steps:
+      # 1️⃣ Clonar el código
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 2️⃣ Instalar jq (para procesar JSON de GitHub API)
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      # 3️⃣ Instalar Koyeb CLI (última versión)
       - name: Install Koyeb CLI (Latest)
         run: |
-            KOYEB_VERSION=$(curl -s https://api.github.com/repos/koyeb/koyeb-cli/releases/latest | grep tag_name | cut -d '"' -f 4)
-            echo "Latest version: $KOYEB_VERSION"
-            curl -L "https://github.com/koyeb/koyeb-cli/releases/download/${KOYEB_VERSION}/koyeb-linux-amd64" -o koyeb
-            chmod +x koyeb
-            sudo mv koyeb /usr/local/bin/koyeb
-            koyeb --version
+          set -e
+          KOYEB_VERSION=$(curl -s https://api.github.com/repos/koyeb/koyeb-cli/releases/latest | jq -r .tag_name)
+          echo "Latest version: $KOYEB_VERSION"
+          curl -L "https://github.com/koyeb/koyeb-cli/releases/download/${KOYEB_VERSION}/koyeb-linux-amd64" -o koyeb
+          chmod +x koyeb
+          sudo mv koyeb /usr/local/bin/koyeb
+          koyeb --version
 
+      # 4️⃣ Desplegar automáticamente a Koyeb
       - name: Deploy to Koyeb
         run: |
           koyeb login --token $KOYEB_API_KEY
-          koyeb services update book-social-proyect \
-            --git github.com/dab960405/book-social-proyect \
-            --branch main \
-            --dockerfile book-network/Dockerfile \
-            --context .
+
+          # Verifica si el servicio ya existe en Koyeb
+          if koyeb services list | grep -q "book-social-proyect"; then
+            echo "🔁 Actualizando servicio existente..."
+            koyeb services update book-social-proyect \
+              --git github.com/dab960405/book-social-proyect \
+              --branch main \
+              --dockerfile book-network/Dockerfile \
+              --context .
+          else
+            echo "🚀 Creando nuevo servicio..."
+            koyeb services create book-social-proyect \
+              --git github.com/dab960405/book-social-proyect \
+              --branch main \
+              --dockerfile book-network/Dockerfile \
+              --context .
+          fi
         env:
           KOYEB_API_KEY: ${{ secrets.KOYEB_API_KEY }}
 
