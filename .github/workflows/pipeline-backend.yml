@@ -7,7 +7,7 @@ on:
     paths:
       - 'book-network/**'
       - 'pom.xml'
-      - '.github/workflows/pipelinebackend.yml'
+      - '.github/workflows/pipeline-backend.yml'
   pull_request:
     branches:
       - main
