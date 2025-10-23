@@ -50,15 +50,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Koyeb CLI
+      - name: Install Koyeb CLI (Static Download)
         run: |
-          curl -sSfL https://install.koyeb.com | sh
-          echo "$HOME/.koyeb/bin" >> $GITHUB_PATH
-        shell: bash
+          KOYEB_VERSION=v5.6.0
+          curl -L "https://github.com/koyeb/koyeb-cli/releases/download/${KOYEB_VERSION}/koyeb-linux-amd64" -o koyeb
+          chmod +x koyeb
+          sudo mv koyeb /usr/local/bin/koyeb
+          koyeb --version
 
       - name: Deploy to Koyeb
         run: |
-          export PATH="$HOME/.koyeb/bin:$PATH"
           koyeb login --token $KOYEB_API_KEY
           koyeb services update book-social-proyect \
             --git github.com/dab960405/book-social-proyect \
@@ -67,3 +68,4 @@ jobs:
             --context .
         env:
           KOYEB_API_KEY: ${{ secrets.KOYEB_API_KEY }}
+
