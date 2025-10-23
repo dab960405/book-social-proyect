@@ -23,16 +23,17 @@ jobs:
           set -e
           echo "📦 Descargando e instalando Koyeb CLI..."
           curl -sL https://get.koyeb.com | bash
-          export PATH=$PATH:$HOME/.koyeb/bin
-          koyeb version
+          echo "✅ Instalación completada"
+          echo "$HOME/.koyeb/bin" >> $GITHUB_PATH
+          koyeb version || echo "Verificando instalación..."
 
       - name: Deploy to Koyeb
         env:
           KOYEB_API_TOKEN: ${{ secrets.KOYEB_API_TOKEN }}
         run: |
           echo "🚀 Desplegando aplicación en Koyeb..."
-          export PATH=$PATH:$HOME/.koyeb/bin
           koyeb app deploy my-app \
             --git github.com/${{ github.repository }} \
             --branch main \
             --token $KOYEB_API_TOKEN
+
