@@ -1,39 +1,59 @@
-name: Deploy to Koyeb
+name: BSN Backend CI/CD
 
 on:
   push:
     branches:
-      - main  # o la rama que uses para deploy
+      - main
+    paths:
+      - 'book-network/**'
+      - 'pom.xml'
+      - '.github/workflows/backend-ci-cd.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'book-network/**'
 
 jobs:
-  deploy:
+  # ✅ TEST DEL BACKEND
+  test:
+    name: Run Backend Tests
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - name: Setup Java
+        uses: actions/setup-java@v4
         with:
-          node-version: 18
+          java-version: '17'
+          distribution: 'corretto'
 
-      - name: Install dependencies
-        run: npm install
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-m2-
 
-      # --- Instalación correcta del CLI de Koyeb ---
-      - name: Install Koyeb CLI
+      - name: Run Unit Tests
+        working-directory: ./book-network
+        run: ./mvnw clean test
+
+  # 🚀 DEPLOY AUTOMÁTICO A RAILWAY
+  deploy:
+    name: Deploy Backend to Railway
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Railway
         run: |
-          curl -fsSL https://github.com/koyeb/koyeb-cli/releases/latest/download/koyeb-linux-amd64 -o /usr/local/bin/koyeb
-          chmod +x /usr/local/bin/koyeb
-          koyeb version
-
-      # --- Despliegue en Koyeb ---
-      - name: Deploy to Koyeb
+          npm install -g @railway/cli
+          cd book-network
+          railway up --service book-social-proyect --detach
         env:
-          KOYEB_API_TOKEN: ${{ secrets.KOYEB_API_TOKEN }}
-        run: |
-          echo "🚀 Desplegando aplicación en Koyeb..."
-          koyeb app deploy --name book-social-proyect --git-branch main --git-repo https://github.com/${{ github.repository }}
-
-
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
