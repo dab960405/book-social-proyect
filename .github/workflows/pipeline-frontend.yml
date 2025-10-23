@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - 'book-network-ui/**'
-      - '.github/workflows/frontend-ci-cd.yml'
+      - '.github/workflows/pipeline-frontend.yml'
   pull_request:
     branches:
       - main
