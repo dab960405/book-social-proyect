@@ -42,31 +42,13 @@ jobs:
         run: ./mvnw clean test
 
   # 🚀 DEPLOY AUTOMÁTICO A KOYEB
-  deploy:
-    name: Deploy Backend to Koyeb
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
       - name: Install Koyeb CLI
         run: |
-          wget https://github.com/koyeb/koyeb-cli/releases/latest/download/koyeb-linux-amd64
+          KOYEB_VERSION=v5.6.0
+          wget https://github.com/koyeb/koyeb-cli/releases/download/$KOYEB_VERSION/koyeb-linux-amd64
           chmod +x koyeb-linux-amd64
           mkdir -p $HOME/.koyeb/bin
           mv koyeb-linux-amd64 $HOME/.koyeb/bin/koyeb
           echo "$HOME/.koyeb/bin" >> $GITHUB_PATH
           koyeb --version
-
-      - name: Deploy to Koyeb
-        run: |
-          koyeb apps deploy \
-            --app book-social-proyect \
-            --git github.com/dab960405/book-social-proyect \
-            --branch main \
-            --dockerfile book-network/Dockerfile \
-            --context . \
-            --token $KOYEB_API_TOKEN
-        env:
-          KOYEB_API_TOKEN: ${{ secrets.KOYEB_API_TOKEN }}
+  
