@@ -21,10 +21,9 @@ jobs:
       - name: Install Koyeb CLI (Stable Binary)
         run: |
           set -e
-          echo "📦 Descargando versión estable del Koyeb CLI..."
-          curl -fsSL https://github.com/koyeb/koyeb-cli/releases/latest/download/koyeb-linux-amd64 -o koyeb
-          chmod +x koyeb
-          sudo mv koyeb /usr/local/bin/koyeb
+          echo "📦 Descargando e instalando Koyeb CLI..."
+          curl -sL https://get.koyeb.com | bash
+          export PATH=$PATH:$HOME/.koyeb/bin
           koyeb version
 
       - name: Deploy to Koyeb
@@ -32,6 +31,7 @@ jobs:
           KOYEB_API_TOKEN: ${{ secrets.KOYEB_API_TOKEN }}
         run: |
           echo "🚀 Desplegando aplicación en Koyeb..."
+          export PATH=$PATH:$HOME/.koyeb/bin
           koyeb app deploy my-app \
             --git github.com/${{ github.repository }} \
             --branch main \
