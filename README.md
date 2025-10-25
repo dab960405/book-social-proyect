@@ -175,11 +175,7 @@ Automatización completa del flujo de desarrollo.
 
 ---
 
-## 📝 Licencia
 
-Este proyecto está bajo la Licencia MIT.
-
----
 
 ## 👥 Contribuciones
 
@@ -189,5 +185,5 @@ Las contribuciones son bienvenidas. Por favor, abre un issue o pull request para
 
 ## 📧 Contacto
 
-Para más información, contacta a [tu-email@ejemplo.com](mailto:tu-email@ejemplo.com)
+Para más información, contacta a diegobravo.ac@academia.umb.edu.co
 
