@@ -1,23 +1,24 @@
-# 📚 Book Social Network
+📚 Book Social Network
 
-**Book Social Network** es una red social orientada al intercambio de libros entre usuarios. Permite registrar y autenticar usuarios (usando JWT), gestionar libros (crear, compartir, prestar y devolver), y dejar feedback sobre libros. 
+Book Social Network es una red social orientada al intercambio de libros entre usuarios.
+Permite registrar y autenticar usuarios (usando JWT), gestionar libros (crear, compartir, prestar y devolver) y dejar feedback sobre ellos.
 
-El sistema está construido bajo el patrón arquitectónico **Modelo-Vista-Controlador (MVC)**. El backend está desarrollado con **Spring Boot**, y el frontend con **Angular**. La comunicación se realiza a través de una **API RESTful** segura, documentada con **Swagger/OpenAPI**.
+El sistema sigue el patrón Modelo-Vista-Controlador (MVC).
+El backend está desarrollado con Spring Boot y el frontend con Angular.
+La comunicación entre ambos se realiza a través de una API RESTful segura, documentada con Swagger/OpenAPI.
 
----
+🚀 Tecnologías utilizadas
 
-## 🚀 Tecnologías utilizadas
+Backend: Java 18, Spring Boot 3.2.x, Spring Security (JWT), Spring Data JPA, Maven, Lombok, Swagger (springdoc), SendGrid
 
-- **Backend:** Java 18, Spring Boot 3.2.x, Spring Security (JWT), Spring Data JPA, Maven, Lombok, Swagger (springdoc), SendGrid
-- **Frontend:** Angular 16, Bootstrap, TypeScript, RxJS
-- **Base de datos:** PostgreSQL
-- **Infraestructura y DevOps:** Docker, Docker Compose, GitHub Actions, Nginx, Koyeb, Vercel
+Frontend: Angular 16, Bootstrap, TypeScript, RxJS
 
----
+Base de datos: PostgreSQL
 
-## 🧩 Estructura del proyecto
+Infraestructura y DevOps: Docker, Docker Compose, GitHub Actions, Nginx, Koyeb, Vercel
 
-```plaintext
+🧩 Estructura del proyecto
+
 book-social-project/
 ├── book-network/           # Backend (Spring Boot)
 │   ├── src/                # Código fuente Java
@@ -33,15 +34,19 @@ book-social-project/
 ├── docker-compose.yml      # Orquestación de servicios
 └── diagrams.drawio         # Diagramas de arquitectura
 
-🛠 Instalación y ejecución local
+⚙️ Instalación y ejecución local
 ✅ Requisitos previos
 
 Java 17+
+
 Node.js 16+
+
 Docker y Docker Compose
+
 Cuenta y API Key de SendGrid
 
 🔄 Opción 1: Usando Docker Compose
+
 git clone https://github.com/tu-usuario/book-social-network.git
 cd book-social-network
 docker-compose up --build
@@ -49,7 +54,8 @@ docker-compose up --build
 Frontend: http://localhost:8080
 Backend: http://localhost:8088/api/v1
 
-🔧 Opción 2: Manual
+🔧 Opción 2: Ejecución manual
+
 Backend:
 cd book-network
 ./mvnw clean package
@@ -60,64 +66,45 @@ cd book-network-ui
 npm install
 ng build --configuration production
 
-Sirve el contenido generado en /dist con Nginx o ng serve en desarrollo.
+Luego sirve el contenido generado en /dist con Nginx o usa ng serve en desarrollo.
+
 📡 Endpoints principales
 🔐 Autenticación
-
-POST /auth/register: Registrar usuario
-
-POST /auth/authenticate: Autenticación (login)
-
-GET /auth/activate-account?token={token}: Activar cuenta por correo
-
+Método	Endpoint	Descripción
+POST	/auth/register	Registrar usuario
+POST	/auth/authenticate	Autenticación (login)
+GET	/auth/activate-account?token={token}	Activar cuenta por correo
 
 📚 Libros
-
-POST /books: Crear libro
-
-GET /books: Listar libros públicos
-
-GET /books/{id}: Ver detalles de libro
-
-GET /books/owner: Mis libros
-
-GET /books/borrowed: Libros prestados
-
-GET /books/returned: Libros devueltos
-
-PATCH /books/shareable/{id}: Activar/desactivar compartición
-
-PATCH /books/archived/{id}: Archivar libro
-
-POST /books/borrow/{id}: Solicitar préstamo
-
-PATCH /books/borrow/return/{id}: Solicitar devolución
-
-PATCH /books/borrow/return/approve/{id}: Aprobar devolución
-
-POST /books/cover/{id}: Subir portada (multipart/form-data)
-
-DELETE /books/{id}: Eliminar libro
-
+Método	Endpoint	Descripción
+POST	/books	Crear libro
+GET	/books	Listar libros públicos
+GET	/books/{id}	Ver detalles de un libro
+GET	/books/owner	Listar mis libros
+GET	/books/borrowed	Libros prestados
+GET	/books/returned	Libros devueltos
+PATCH	/books/shareable/{id}	Activar/desactivar compartición
+PATCH	/books/archived/{id}	Archivar libro
+POST	/books/borrow/{id}	Solicitar préstamo
+PATCH	/books/borrow/return/{id}	Solicitar devolución
+PATCH	/books/borrow/return/approve/{id}	Aprobar devolución
+POST	/books/cover/{id}	Subir portada (multipart/form-data)
+DELETE	/books/{id}	Eliminar libro
 
 💬 Feedback
-
-POST /feedbacks: Enviar feedback de libro
-
-GET /feedbacks/book/{id}: Obtener feedbacks de un libro
+Método	Endpoint	Descripción
+POST	/feedbacks	Enviar feedback de un libro
+GET	/feedbacks/book/{id}	Obtener feedbacks de un libro
 
 ✉️ Email (Testing)
-
-GET /api/v1/test/email: Enviar email de prueba (requiere configuración SendGrid)
-
-📖 Para más detalles, consulta la documentación Swagger disponible en /swagger-ui.html.
-
+Método	Endpoint	Descripción
+GET	/api/v1/test/email	Enviar email de prueba (requiere configuración SendGrid)
 
 🧪 Pruebas
 
-Backend: pruebas unitarias con JUnit (BookNetworkApiApplicationTests)
+Backend: Pruebas unitarias con JUnit (BookNetworkApiApplicationTests)
 
-Frontend: pruebas unitarias con Jasmine/Karma (*.spec.ts)
+Frontend: Pruebas unitarias con Jasmine/Karma (*.spec.ts)
 
 Ejecutadas automáticamente en CI (GitHub Actions)
 
@@ -127,12 +114,12 @@ Configurada con GitHub Actions:
 
 pipeline-backend.yml: build, test y deploy en Koyeb
 
-pipeline-frontend.yml: build y deploy en Vercel (o estático)
+pipeline-frontend.yml: build y deploy en Vercel o entorno estático
 
 Automatización completa del flujo de desarrollo.
 
 🚀 Despliegue
-
-Producción Backend: Koyeb
-Producción Frontend: Vercel
-Docker Compose: para entorno local y pruebas integradas
+Entorno	Plataforma
+Backend (Producción)	Koyeb
+Frontend (Producción)	Vercel
+Entorno local / pruebas	Docker Compose
